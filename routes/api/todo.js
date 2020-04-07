@@ -5,6 +5,7 @@ const db = require('../../database');
 router.get('/', function (req, res) {
   db.select()
     .from('todo')
+    .orderBy('id')
     .then(function (data) {
       res.send(data);
     });
@@ -34,6 +35,23 @@ router.put('/:id', function (req, res) {
       is_done: req.body.is_done || null,
     })
     .returning('*')
+    .then(function (data) {
+      res.send(data);
+    });
+});
+
+router.delete('/:id', function (req, res) {
+  db('todo')
+    .where({ id: req.params.id })
+    .del()
+    .then(function () {
+      res.json({ sucess: true });
+    });
+});
+router.get('/:id', function (req, res) {
+  db('todo')
+    .where({ id: req.params.id })
+    .first()
     .then(function (data) {
       res.send(data);
     });
